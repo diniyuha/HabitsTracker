@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
+using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
 
 namespace HabitsTracker.Logic.Services
@@ -22,6 +24,12 @@ namespace HabitsTracker.Logic.Services
         public Task<User> GetUserById(Guid id)
         {
             throw new  NotImplementedException();
+        }
+
+        public User GetAuthUser(string email, string password)
+        {
+            UserEntity user = _dbContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
+            return _mapper.Map<User>(user);
         }
 
         //TODO
