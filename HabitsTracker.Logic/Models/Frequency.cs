@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HabitsTracker.Logic.Models
 {
-    public class Frequence
+    public class Frequency
     {
         public Guid Id { get; set; }
         

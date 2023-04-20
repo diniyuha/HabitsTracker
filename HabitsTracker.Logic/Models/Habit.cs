@@ -35,6 +35,6 @@ namespace HabitsTracker.Logic.Models
 
         public List<HabitReminder> Reminders { get; set; } = new();
 
-        public List<Frequence> Frequencies { get; set; } = new();
+        public List<int> DayNumbers { get; set; } = new();
     }
 }
