@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using HabitsTracker.Data.Enums;
 
 namespace HabitsTracker.Data.Entities

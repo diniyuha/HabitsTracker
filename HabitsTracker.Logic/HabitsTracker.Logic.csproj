@@ -17,4 +17,8 @@
       <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.117" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HabitsTracker.Data\HabitsTracker.Data.csproj" />
+    </ItemGroup>
+
 </Project>
