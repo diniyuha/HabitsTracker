@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.Data", "HabitsTracker.Data\HabitsTracker.Data.csproj", "{FAE7B976-FE97-47DC-86B0-B526E84DED09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.Logic", "HabitsTracker.Logic\HabitsTracker.Logic.csproj", "{C8315B19-6EB9-43A0-B367-68A316858003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.WebApi", "HabitsTracker.WebApi\HabitsTracker.WebApi.csproj", "{229F8B19-5A85-4480-9868-B81EA485116C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAE7B976-FE97-47DC-86B0-B526E84DED09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAE7B976-FE97-47DC-86B0-B526E84DED09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAE7B976-FE97-47DC-86B0-B526E84DED09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAE7B976-FE97-47DC-86B0-B526E84DED09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8315B19-6EB9-43A0-B367-68A316858003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8315B19-6EB9-43A0-B367-68A316858003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8315B19-6EB9-43A0-B367-68A316858003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8315B19-6EB9-43A0-B367-68A316858003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{229F8B19-5A85-4480-9868-B81EA485116C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{229F8B19-5A85-4480-9868-B81EA485116C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{229F8B19-5A85-4480-9868-B81EA485116C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{229F8B19-5A85-4480-9868-B81EA485116C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
