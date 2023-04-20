@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.Logic", "Habi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.WebApi", "HabitsTracker.WebApi\HabitsTracker.WebApi.csproj", "{229F8B19-5A85-4480-9868-B81EA485116C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsTracker.Tests", "HabitsTracker.Tests\HabitsTracker.Tests.csproj", "{B83593B0-4E92-4F22-9739-64DEC93764BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{229F8B19-5A85-4480-9868-B81EA485116C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{229F8B19-5A85-4480-9868-B81EA485116C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{229F8B19-5A85-4480-9868-B81EA485116C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B83593B0-4E92-4F22-9739-64DEC93764BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B83593B0-4E92-4F22-9739-64DEC93764BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B83593B0-4E92-4F22-9739-64DEC93764BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B83593B0-4E92-4F22-9739-64DEC93764BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

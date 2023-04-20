@@ -1,4 +1,5 @@
 using HabitsTracker.Data;
+using HabitsTracker.Logic.MapProfiles;
 using HabitsTracker.Logic.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ builder.Services
     .AddDbContext<AppDbContext>(options =>
         options.UseSqlite(connectionString));
 
+builder.Services.AddAutoMapper(typeof(MapProfiles));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

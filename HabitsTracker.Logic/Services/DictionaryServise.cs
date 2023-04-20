@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
 using HabitsTracker.Logic.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace HabitsTracker.Logic.Services
 {
