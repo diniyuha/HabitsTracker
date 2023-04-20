@@ -2,7 +2,7 @@
 {
     public enum GoalPeriod
     {
-        Day = 1,
+        Day = 1, 
         Week = 2,
         Month = 3
     }
