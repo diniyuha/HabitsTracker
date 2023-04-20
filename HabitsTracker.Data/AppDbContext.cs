@@ -19,7 +19,7 @@ namespace HabitsTracker.Data
 
         public DbSet<HabitEntity> Habits { get; set; }
 
-        public DbSet<FrequenceEntity> Frequencies { get; set; }
+        public DbSet<FrequencyEntity> Frequencies { get; set; }
 
         public DbSet<UnitEntity> Units { get; set; }
 
@@ -68,9 +68,9 @@ namespace HabitsTracker.Data
             
             modelBuilder.Entity<HabitReminderEntity>().HasKey(x => x.Id);
 
-            modelBuilder.Entity<FrequenceEntity>().HasKey(x => x.Id);
+            modelBuilder.Entity<FrequencyEntity>().HasKey(x => x.Id);
          
-            modelBuilder.Entity<FrequenceEntity>()
+            modelBuilder.Entity<FrequencyEntity>()
                 .Property(x => x.HabitId)
                 .IsRequired();
             

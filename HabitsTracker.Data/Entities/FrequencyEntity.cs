@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HabitsTracker.Data.Entities
 {
-    public class FrequenceEntity
+    public class FrequencyEntity
     {
         public Guid Id { get; set; }
         

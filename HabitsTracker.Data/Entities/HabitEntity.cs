@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using HabitsTracker.Data.Enums;
 
 namespace HabitsTracker.Data.Entities
@@ -35,6 +34,6 @@ namespace HabitsTracker.Data.Entities
 
         public List<HabitReminderEntity> Reminders { get; set; } = new();
 
-        public List<FrequenceEntity> Frequencies { get; set; } = new();
+        public List<FrequencyEntity> Frequencies { get; set; } = new();
     }
 }
