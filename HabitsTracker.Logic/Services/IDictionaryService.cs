@@ -13,6 +13,6 @@ namespace HabitsTracker.Logic.Services
         Task<List<int>> GetFrequenciesByHabitId(Guid habitId);
         
         Task<List<string>> GetRemindersByHabitId(Guid habitId);
-    
     }
+    
 }
