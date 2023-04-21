@@ -7,10 +7,10 @@ namespace HabitsTracker.Logic.Services
 {
     public interface IHabitService
     {
-        Task<List<Habit>> GetHabits(HabitFilter filter = null);
-        Task<Habit> GetHabitById(Guid id);
-        Task<Guid> CreateHabit(Habit habit);
-        Task DeleteHabit(Guid id);
-        Task UpdateHabit(Guid id,  Habit habit);
+        List<Habit> GetHabits(HabitFilter filter = null);
+        Habit GetHabitById(Guid id);
+        Guid CreateHabit(Habit habit);
+        void DeleteHabit(Guid id);
+        void UpdateHabit(Guid id,  Habit habit);
     }
 }

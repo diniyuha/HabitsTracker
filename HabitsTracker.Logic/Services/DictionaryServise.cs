@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using AutoMapper;
 using HabitsTracker.Data;
 using HabitsTracker.Logic.Models;
@@ -11,39 +11,28 @@ namespace HabitsTracker.Logic.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
-        
-        //TODO
+
         public DictionaryService(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        
-        //TODO
-        public Task<List<Habit>> GetHabitsDictionary()
+
+        public List<HabitsDictionary> GetHabitsDictionary()
         {
-            // var habitsDictionary =  _dbContext.HabitsDictionary.ToListAsync();
-            //
-            // return  _mapper.Map<List<Habit>>(habitsDictionary);
-            throw new  NotImplementedException();
+            var habitsDictionary = _dbContext.HabitsDictionary.ToList();
+            return _mapper.Map<List<HabitsDictionary>>(habitsDictionary);
         }
 
-        //TODO
-        public Task<Habit> GetHabitsDictionary(Guid id)
+        public HabitsDictionary GetHabitsDictionary(Guid id)
         {
-            throw new  NotImplementedException();
-        }
+            var habit = _dbContext.HabitsDictionary.Find(id);
+            if (habit == null)
+            {
+                throw new ArgumentException("Not found");
+            }
 
-        //TODO
-        public Task<List<int>> GetFrequenciesByHabitId(Guid habitId)
-        {
-            throw new  NotImplementedException();
-        }
-
-        //TODO
-        public Task<List<string>> GetRemindersByHabitId(Guid habitId)
-        {
-            throw new  NotImplementedException();
+            return _mapper.Map<HabitsDictionary>(habit);
         }
     }
 }

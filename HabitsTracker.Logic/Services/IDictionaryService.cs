@@ -7,12 +7,8 @@ namespace HabitsTracker.Logic.Services
 {
     public interface IDictionaryService
     {
-        Task<List<Habit>> GetHabitsDictionary();
-        Task<Habit> GetHabitsDictionary(Guid id);
-        
-        Task<List<int>> GetFrequenciesByHabitId(Guid habitId);
-        
-        Task<List<string>> GetRemindersByHabitId(Guid habitId);
+        List<HabitsDictionary> GetHabitsDictionary();
+        HabitsDictionary GetHabitsDictionary(Guid id);
     }
     
 }

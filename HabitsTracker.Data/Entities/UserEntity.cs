@@ -19,6 +19,7 @@ namespace HabitsTracker.Data.Entities
         
         public string? Icon { get; set; }
         
+        public Role Role { get; set; }
         public Language Language { get; set; }
         
         public ColorTheme ColorTheme { get; set; }

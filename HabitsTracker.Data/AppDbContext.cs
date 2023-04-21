@@ -43,6 +43,10 @@ namespace HabitsTracker.Data
             modelBuilder.Entity<UserEntity>()
                 .Property(x => x.Password)
                 .IsRequired();
+           
+            modelBuilder.Entity<UserEntity>()
+                .Property(x => x.Role)
+                .HasDefaultValue(Role.User);
 
             modelBuilder.Entity<HabitsDictionaryEntity>()
                 .HasKey(x => x.Id);

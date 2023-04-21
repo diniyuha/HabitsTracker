@@ -14,6 +14,8 @@ namespace HabitsTracker.Logic.Models
         public string? Surname { get; set; }
         
         public string? Icon { get; set; }
+      
+        public Role Role { get; set; }
         
         public Language Language { get; set; }
         

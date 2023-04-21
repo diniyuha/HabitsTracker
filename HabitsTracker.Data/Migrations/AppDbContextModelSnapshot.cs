@@ -17,7 +17,7 @@ namespace HabitsTracker.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.16");
 
-            modelBuilder.Entity("HabitsTracker.Data.Entities.FrequenceEntity", b =>
+            modelBuilder.Entity("HabitsTracker.Data.Entities.FrequencyEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,6 +179,9 @@ namespace HabitsTracker.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Surname")
                         .HasColumnType("TEXT");
 
@@ -187,7 +190,7 @@ namespace HabitsTracker.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("HabitsTracker.Data.Entities.FrequenceEntity", b =>
+            modelBuilder.Entity("HabitsTracker.Data.Entities.FrequencyEntity", b =>
                 {
                     b.HasOne("HabitsTracker.Data.Entities.HabitEntity", "Habit")
                         .WithMany("Frequencies")

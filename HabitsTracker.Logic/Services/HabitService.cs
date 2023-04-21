@@ -19,31 +19,31 @@ namespace HabitsTracker.Logic.Services
         }
         
         //TODO
-        public Task<List<Habit>> GetHabits(HabitFilter filter = null)
+        public List<Habit> GetHabits(HabitFilter filter = null)
         {
              throw new  NotImplementedException();
         }
 
         //TODO
-        public Task<Habit> GetHabitById(Guid id)
+        public Habit GetHabitById(Guid id)
         {
             throw new  NotImplementedException();
         }
 
         //TODO
-        public Task<Guid> CreateHabit(Habit habit)
+        public Guid CreateHabit(Habit habit)
         {
             throw new  NotImplementedException();
         }
 
         //TODO
-        public Task DeleteHabit(Guid id)
+        public void DeleteHabit(Guid id)
         {
             throw new  NotImplementedException();
         }
 
         //TODO
-        public Task UpdateHabit(Guid id, Habit habit)
+        public void UpdateHabit(Guid id, Habit habit)
         {
             throw new  NotImplementedException();
         }
