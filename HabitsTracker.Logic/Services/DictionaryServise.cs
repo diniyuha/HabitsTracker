@@ -31,7 +31,6 @@ namespace HabitsTracker.Logic.Services
             {
                 throw new ArgumentException("Not found");
             }
-
             return _mapper.Map<HabitsDictionary>(habit);
         }
     }
