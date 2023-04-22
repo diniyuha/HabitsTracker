@@ -28,7 +28,12 @@ namespace HabitsTracker.Logic.Services
         //TODO
         public Habit GetHabitById(Guid id)
         {
-            throw new  NotImplementedException();
+            var habit = _dbContext.Habits.Find(id);
+            if (habit == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+            return _mapper.Map<Habit>(habit);
         }
 
         //TODO
