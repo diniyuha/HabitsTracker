@@ -71,12 +71,11 @@ namespace HabitsTracker.WebApi.Controllers
                         ClaimsIdentity.DefaultRoleClaimType);
                 return claimsIdentity;
             }
-
             return null;
         }
-        
+
         [HttpPost]
-        public  IActionResult Register(string email, string password  )
+        public IActionResult Register(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
@@ -103,6 +102,29 @@ namespace HabitsTracker.WebApi.Controllers
 
             return Ok();
         }
-        
+
+        [HttpPost("{id}")]
+        public IActionResult UpdateUser(Guid id, [FromForm] User user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+
+            _userService.UpdateUser(id, user);
+            return Ok();
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeleteUser(Guid id)
+        {
+            var user = _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            _userService.DeleteUser(id);
+            return Ok();
+        }
     }
 }

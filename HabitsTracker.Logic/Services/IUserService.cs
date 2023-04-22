@@ -10,8 +10,8 @@ namespace HabitsTracker.Logic.Services
         User GetUserById(Guid id);
         User GetAuthUser(string email, string password);
         Guid CreateUser(string email, string password);
-        void DeleteUser(Guid id);
         void UpdateUser(Guid id, User user);
+        void DeleteUser(Guid id);
         bool CheckEmailForMatches(string email);
         Task SendConfirmationEmailAsync(string email);
     }

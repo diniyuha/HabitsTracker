@@ -8,7 +8,8 @@ namespace HabitsTracker.Logic.Services
     public interface IDictionaryService
     {
         List<HabitsDictionary> GetHabitsDictionary();
-        HabitsDictionary GetHabitsDictionary(Guid id);
+        HabitsDictionary GetHabitsDictionaryById(Guid id);
+        Unit GetUnitById(Guid id);
     }
     
 }

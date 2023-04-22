@@ -12,7 +12,7 @@ using MailKit.Security;
 
 namespace HabitsTracker.Logic.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -25,8 +25,7 @@ namespace HabitsTracker.Logic.Services
             _mapper = mapper;
             _configuration = configuration;
         }
-        
-        //TODO
+
         public User GetUserById(Guid id)
         {
             var userEntity = _dbContext.Users.Find(id);
@@ -34,6 +33,7 @@ namespace HabitsTracker.Logic.Services
             {
                 throw new ArgumentException("Not found");
             }
+
             return _mapper.Map<User>(userEntity);
         }
 
@@ -42,8 +42,6 @@ namespace HabitsTracker.Logic.Services
             UserEntity user = _dbContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
             return _mapper.Map<User>(user);
         }
-        
-        
 
         public Guid CreateUser(string email, string password)
         {
@@ -53,34 +51,47 @@ namespace HabitsTracker.Logic.Services
                 Email = email,
                 Password = password
             };
-            
+
             _dbContext.Users.Add(user);
             _dbContext.SaveChangesAsync();
-            
+
             return user.Id;
         }
 
-        //TODO
-        public void DeleteUser(Guid id)
-        {
-            throw new  NotImplementedException();
-        }
-
-        //TODO
         public void UpdateUser(Guid id, User user)
         {
-            throw new  NotImplementedException();
+            var userEntity = _dbContext.Users.Find(id);
+            if (userEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _mapper.Map(user, userEntity);
+            _dbContext.SaveChangesAsync();
+        }
+
+        public void DeleteUser(Guid id)
+        {
+            var userEntity = _dbContext.Users.Find(id);
+            if (userEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _dbContext.Users.Remove(userEntity);
+            _dbContext.SaveChangesAsync();
         }
 
         public bool CheckEmailForMatches(string email)
         {
-            if (_dbContext.Users.Any(u => u.Email == email)) 
+            if (_dbContext.Users.Any(u => u.Email == email))
             {
                 return true;
             }
+
             return false;
         }
-        
+
         public async Task SendConfirmationEmailAsync(string email)
         {
             var message = new MimeMessage();
@@ -88,7 +99,8 @@ namespace HabitsTracker.Logic.Services
             message.To.Add(new MailboxAddress("", email));
             message.Subject = "Confirm your email address";
             var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = "<p>Please confirm your email address by clicking the following link:</p><a href='https://yourapp.com/confirm-email'>Confirm Email</a>";
+            bodyBuilder.HtmlBody =
+                "<p>Please confirm your email address by clicking the following link:</p><a href='https://yourapp.com/confirm-email'>Confirm Email</a>";
             message.Body = bodyBuilder.ToMessageBody();
 
             using (var client = new SmtpClient())
@@ -108,6 +120,5 @@ namespace HabitsTracker.Logic.Services
                 await client.DisconnectAsync(true);
             }
         }
-        
     }
 }
