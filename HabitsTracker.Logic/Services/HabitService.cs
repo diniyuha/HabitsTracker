@@ -21,7 +21,8 @@ namespace HabitsTracker.Logic.Services
         //TODO
         public List<Habit> GetHabits(HabitFilter filter = null)
         {
-             throw new  NotImplementedException();
+            var habits = _dbContext.Habits.ToList();
+            return _mapper.Map<List<Habit>>(habits);
         }
 
         //TODO
