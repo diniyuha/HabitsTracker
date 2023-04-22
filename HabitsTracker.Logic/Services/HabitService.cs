@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
+using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,13 +67,27 @@ namespace HabitsTracker.Logic.Services
         //TODO
         public void DeleteHabit(Guid id)
         {
-            throw new NotImplementedException();
+            var habitEntity = _dbContext.Habits.Find(id);
+            if (habitEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _dbContext.Habits.Remove(habitEntity);
+            _dbContext.SaveChangesAsync();
         }
 
         //TODO
         public void UpdateHabit(Guid id, Habit habit)
         {
-            throw new NotImplementedException();
+            var habitEntity = _dbContext.Habits.Find(id);
+            if (habitEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _mapper.Map(habit, habitEntity);
+            _dbContext.SaveChangesAsync();
         }
 
         public List<Habit> GetHabits(HabitFilter filter = null)
