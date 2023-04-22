@@ -7,10 +7,12 @@ namespace HabitsTracker.Logic.Services
 {
     public interface IUserService
     {
-        Task<User> GetUserById(Guid id);
+        User GetUserById(Guid id);
         User GetAuthUser(string email, string password);
-        Task<Guid> CreateUser(User user);
-        Task DeleteUser(Guid id);
-        Task UpdateUser(Guid id, User user);
+        Guid CreateUser(string email, string password);
+        void DeleteUser(Guid id);
+        void UpdateUser(Guid id, User user);
+        bool CheckEmailForMatches(string email);
+        Task SendConfirmationEmailAsync(string email);
     }
 }

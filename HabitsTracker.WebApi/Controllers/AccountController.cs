@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using HabitsTracker.Logic.Models;
 using HabitsTracker.Logic.Services;
@@ -73,5 +74,35 @@ namespace HabitsTracker.WebApi.Controllers
 
             return null;
         }
+        
+        [HttpPost]
+        public  IActionResult Register(string email, string password  )
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                return BadRequest("Email and password are required.");
+            }
+
+            if (_userService.CheckEmailForMatches(email))
+            {
+                return BadRequest("User with this email already exists.");
+            }
+
+            // Hash the password before saving to the database
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                password = Encoding.UTF8.GetString(hashedBytes);
+            }
+
+            var userId = _userService.CreateUser(email, password);
+            var user = _userService.GetUserById(userId);
+
+            // Send confirmation email
+            _userService.SendConfirmationEmailAsync(user.Email);
+
+            return Ok();
+        }
+        
     }
 }
