@@ -68,5 +68,10 @@ namespace HabitsTracker.Logic.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<Habit> GetHabits(HabitFilter filter = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
