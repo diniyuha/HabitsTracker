@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using HabitsTracker.Logic.Models;
 using HabitsTracker.Logic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -71,6 +72,7 @@ namespace HabitsTracker.WebApi.Controllers
                         ClaimsIdentity.DefaultRoleClaimType);
                 return claimsIdentity;
             }
+
             return null;
         }
 
@@ -103,7 +105,8 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok();
         }
 
-        [HttpPost("{id}")]
+        [Authorize]
+        [HttpPut("{id}")]
         public IActionResult UpdateUser(Guid id, [FromForm] User user)
         {
             if (id != user.Id)
@@ -115,16 +118,22 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
-        public IActionResult DeleteUser(Guid id)
+        [Authorize]
+        [HttpDelete("delete")]
+        public IActionResult DeleteUser()
         {
-            var user = _userService.GetUserById(id);
-            if (user == null)
+            var userEmail = User.Identity?.Name;
+            if (userEmail != null)
             {
-                return NotFound();
+                var user = _userService.GetUserByEmail(userEmail);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                _userService.DeleteUser(user.Id);
+                return Ok();
             }
-            _userService.DeleteUser(id);
-            return Ok();
+            return NotFound();
         }
     }
 }

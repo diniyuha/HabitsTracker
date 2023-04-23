@@ -17,7 +17,8 @@ namespace HabitsTracker.Logic.MapProfiles
 
             CreateMap<UserEntity, User>();
             CreateMap<User, UserEntity>()
-                .ForMember(d => d.Id, o => o.Ignore());
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Role, o => o.Ignore());
 
             CreateMap<HabitsDictionaryEntity, HabitsDictionary>();
             CreateMap<HabitsDictionary, HabitsDictionaryEntity>()

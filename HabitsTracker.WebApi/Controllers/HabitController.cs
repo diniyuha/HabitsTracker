@@ -1,8 +1,11 @@
 ﻿using HabitsTracker.Logic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HabitsTracker.WebApi.Controllers
 {
+ 
+    [Authorize]
     public class HabitController : Controller
     {
         private readonly IHabitService _habitService;

@@ -14,5 +14,6 @@ namespace HabitsTracker.Logic.Services
         void DeleteUser(Guid id);
         bool CheckEmailForMatches(string email);
         Task SendConfirmationEmailAsync(string email);
+        User GetUserByEmail(string email);
     }
 }

@@ -37,6 +37,17 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<User>(userEntity);
         }
 
+        public User GetUserByEmail(string email)
+        {
+            var userEntity = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+            if (userEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            return _mapper.Map<User>(userEntity);
+        }
+        
         public User GetAuthUser(string email, string password)
         {
             UserEntity user = _dbContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
