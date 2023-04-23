@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
-using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,6 +52,7 @@ namespace HabitsTracker.Logic.Services
             {
                 throw new ArgumentException("Not found");
             }
+
             return _mapper.Map<Habit>(habit);
         }
 
@@ -74,8 +72,8 @@ namespace HabitsTracker.Logic.Services
             //return Guid.NewGuid();
         }
 
-            //TODO
-            public void DeleteHabit(Guid id)
+
+        public void DeleteHabit(Guid id)
         {
             var habitEntity = _dbContext.Habits.Find(id);
             if (habitEntity == null)
@@ -87,7 +85,6 @@ namespace HabitsTracker.Logic.Services
             _dbContext.SaveChangesAsync();
         }
 
-        //TODO
         public void UpdateHabit(Guid id, Habit habit)
         {
             var habitEntity = _dbContext.Habits.Find(id);
@@ -98,11 +95,6 @@ namespace HabitsTracker.Logic.Services
 
             _mapper.Map(habit, habitEntity);
             _dbContext.SaveChangesAsync();
-        }
-
-        public List<Habit> GetHabits(HabitFilter filter = null)
-        {
-            throw new NotImplementedException();
         }
     }
 }
