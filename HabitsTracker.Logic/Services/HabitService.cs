@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
+using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,23 +50,57 @@ namespace HabitsTracker.Logic.Services
 
         public Habit GetHabitById(Guid id)
         {
-            throw new NotImplementedException();
+            var habit = _dbContext.Habits.Find(id);
+            if (habit == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+            return _mapper.Map<Habit>(habit);
         }
 
         //TODO
         public Guid CreateHabit(Habit habit)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Not found");
+            //var newHabit = new HabitEntity()
+            //{
+            //    Frequencies = habit.Frequencies,
+            //    Reminders = habit.Reminders,
+            //};
+
+            //_dbContext.Habits.Add(newHabit);
+            //_dbContext.SaveChangesAsync();
+
+            //return Guid.NewGuid();
         }
 
-        //TODO
-        public void DeleteHabit(Guid id)
+            //TODO
+            public void DeleteHabit(Guid id)
         {
-            throw new NotImplementedException();
+            var habitEntity = _dbContext.Habits.Find(id);
+            if (habitEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _dbContext.Habits.Remove(habitEntity);
+            _dbContext.SaveChangesAsync();
         }
 
         //TODO
         public void UpdateHabit(Guid id, Habit habit)
+        {
+            var habitEntity = _dbContext.Habits.Find(id);
+            if (habitEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _mapper.Map(habit, habitEntity);
+            _dbContext.SaveChangesAsync();
+        }
+
+        public List<Habit> GetHabits(HabitFilter filter = null)
         {
             throw new NotImplementedException();
         }

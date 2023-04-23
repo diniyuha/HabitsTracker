@@ -24,6 +24,11 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<List<HabitsDictionary>>(habitsDictionary);
         }
 
+        public HabitsDictionary GetHabitsDictionary(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public HabitsDictionary GetHabitsDictionaryById(Guid id)
         {
             var habit = _dbContext.HabitsDictionary.Find(id);
@@ -42,6 +47,16 @@ namespace HabitsTracker.Logic.Services
                 throw new ArgumentException("Not found");
             }
             return _mapper.Map<Unit>(unitEntity);
+        }
+
+        object IDictionaryService.GetHabitsDictionaryById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        object IDictionaryService.GetUnitById(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
