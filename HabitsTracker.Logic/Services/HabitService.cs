@@ -61,11 +61,21 @@ namespace HabitsTracker.Logic.Services
         //TODO
         public Guid CreateHabit(Habit habit)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Not found");
+            //var newHabit = new HabitEntity()
+            //{
+            //    Frequencies = habit.Frequencies,
+            //    Reminders = habit.Reminders,
+            //};
+
+            //_dbContext.Habits.Add(newHabit);
+            //_dbContext.SaveChangesAsync();
+
+            //return Guid.NewGuid();
         }
 
-        //TODO
-        public void DeleteHabit(Guid id)
+            //TODO
+            public void DeleteHabit(Guid id)
         {
             var habitEntity = _dbContext.Habits.Find(id);
             if (habitEntity == null)
