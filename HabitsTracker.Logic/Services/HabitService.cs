@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using HabitsTracker.Data;
+using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,22 +57,19 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<Habit>(habit);
         }
 
-        //TODO
         public Guid CreateHabit(Habit habit)
         {
-            throw new ArgumentException("Not found");
-            //var newHabit = new HabitEntity()
-            //{
-            //    Frequencies = habit.Frequencies,
-            //    Reminders = habit.Reminders,
-            //};
+            var newHabit = new HabitEntity()
+            {
+                Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity { DayNumber = x }).ToList(),
+                Reminders = new List<HabitReminderEntity>((IEnumerable<HabitReminderEntity>)habit),
+            };
 
-            //_dbContext.Habits.Add(newHabit);
-            //_dbContext.SaveChangesAsync();
+            _dbContext.Habits.Add(newHabit);
+            _dbContext.SaveChangesAsync();
 
-            //return Guid.NewGuid();
+            return Guid.NewGuid();
         }
-
 
         public void DeleteHabit(Guid id)
         {
