@@ -59,28 +59,18 @@ namespace HabitsTracker.Logic.Services
 
         public Guid CreateHabit(Habit habit)
         {
-            var newHabit = new HabitEntity()
+            var habitEntity = _mapper.Map<HabitEntity>(habit);
+            habitEntity.Id = Guid.NewGuid();
+            habitEntity.Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity
             {
-                Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity { DayNumber = x }).ToList(),
-                Reminders = new List<HabitReminderEntity>((IEnumerable<HabitReminderEntity>)habit),
-            };
+                Id = Guid.NewGuid(),
+                DayNumber = x
+            }).ToList();
 
-            _dbContext.Habits.Add(newHabit);
+            _dbContext.Habits.Add(habitEntity);
             _dbContext.SaveChangesAsync();
 
-            return Guid.NewGuid();
-        }
-
-        public void DeleteHabit(Guid id)
-        {
-            var habitEntity = _dbContext.Habits.Find(id);
-            if (habitEntity == null)
-            {
-                throw new ArgumentException("Not found");
-            }
-
-            _dbContext.Habits.Remove(habitEntity);
-            _dbContext.SaveChangesAsync();
+            return habitEntity.Id;
         }
 
         public void UpdateHabit(Guid id, Habit habit)
@@ -92,6 +82,24 @@ namespace HabitsTracker.Logic.Services
             }
 
             _mapper.Map(habit, habitEntity);
+            habitEntity.Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity
+            {
+                Id = Guid.NewGuid(),
+                DayNumber = x
+            }).ToList();
+
+            _dbContext.SaveChangesAsync();
+        }
+
+        public void DeleteHabit(Guid id)
+        {
+            var habitEntity = _dbContext.Habits.Find(id);
+            if (habitEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _dbContext.Habits.Remove(habitEntity);
             _dbContext.SaveChangesAsync();
         }
     }

@@ -32,7 +32,7 @@ namespace HabitsTracker.WebApi.Controllers
             var identity = GetIdentity(username, password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                return BadRequest(new {errorText = "Invalid username or password."});
             }
 
             var now = DateTime.UtcNow;
@@ -106,20 +106,17 @@ namespace HabitsTracker.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public IActionResult UpdateUser(Guid id, [FromForm] User user)
+        [HttpPut]
+        public IActionResult UpdateUser([FromForm] User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+            var userEntity = _userService.GetUserByEmail(User.Identity?.Name);
 
-            _userService.UpdateUser(id, user);
+            _userService.UpdateUser(userEntity.Id, user);
             return Ok();
         }
 
         [Authorize]
-        [HttpDelete("delete")]
+        [HttpDelete]
         public IActionResult DeleteUser()
         {
             var userEmail = User.Identity?.Name;
@@ -130,9 +127,11 @@ namespace HabitsTracker.WebApi.Controllers
                 {
                     return NotFound();
                 }
+
                 _userService.DeleteUser(user.Id);
                 return Ok();
             }
+
             return NotFound();
         }
     }

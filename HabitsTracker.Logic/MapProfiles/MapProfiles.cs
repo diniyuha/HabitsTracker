@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using HabitsTracker.Data.Entities;
 using HabitsTracker.Logic.Models;
@@ -23,21 +24,12 @@ namespace HabitsTracker.Logic.MapProfiles
             CreateMap<HabitsDictionaryEntity, HabitsDictionary>();
             CreateMap<HabitsDictionary, HabitsDictionaryEntity>()
                 .ForMember(d => d.Id, o => o.Ignore());
-            
+
             CreateMap<HabitReminderEntity, HabitReminder>();
             CreateMap<HabitReminder, HabitReminderEntity>()
-                .ForMember(d => d.Id, o => o.Ignore());
-
-
-            CreateMap<FrequencyEntity, Frequency>();
-            CreateMap<Frequency, FrequencyEntity>()
-                .ForMember(d => d.Id, o => o.Ignore());
-
+                .ForMember(d => d.Id, o => o.MapFrom(s => Guid.NewGuid()));
 
             CreateMap<Unit, Unit>();
-            CreateMap<Frequency, UnitEntity>()
-                .ForMember(d => d.Id, o => o.Ignore());
-
         }
     }
 }
