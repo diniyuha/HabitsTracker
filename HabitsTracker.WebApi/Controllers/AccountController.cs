@@ -32,7 +32,7 @@ namespace HabitsTracker.WebApi.Controllers
             var identity = GetIdentity(username, password);
             if (identity == null)
             {
-                return BadRequest(new {errorText = "Invalid username or password."});
+                return BadRequest(new { errorText = "Invalid username or password." });
             }
 
             var now = DateTime.UtcNow;
