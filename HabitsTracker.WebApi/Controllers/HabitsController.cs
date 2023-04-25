@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HabitsTracker.Logic.Models;
 using HabitsTracker.Logic.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +21,24 @@ namespace HabitsTracker.WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult GetHabits(HabitFilter filter = null)
+        /// <summary>
+        /// Получения списка привычек с использованием фильтров(необязательно для заполнения)
+        /// </summary>
+        /// <param name="filter">Фильтры: единица измерения, наименование</param>
+        /// <returns></returns>
+        [HttpPost("list")]
+        public IActionResult GetHabits([FromBody] HabitFilter? filter = null)
         {
             var user = _userService.GetUserByEmail(User.Identity?.Name);
             var habitsList = _habitService.GetHabits(user.Id, filter);
             return Ok(habitsList);
         }
 
+        /// <summary>
+        /// Получение привычки по id
+        /// </summary>
+        /// <param name="id">id привычки</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public IActionResult GetHabitById(Guid id)
         {
@@ -41,8 +52,13 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok(habitsItem);
         }
 
+        /// <summary>
+        /// Создание новой привычки
+        /// </summary>
+        /// <param name="habit">Данные привычки</param>
+        /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateHabit([FromForm] Habit habit)
+        public IActionResult CreateHabit([FromBody] Habit habit)
         {
             var user = _userService.GetUserByEmail(User.Identity?.Name);
             habit.UserId = user.Id;
@@ -50,6 +66,11 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok(habitUnit);
         }
 
+        /// <summary>
+        /// Удаление привычки по id
+        /// </summary>
+        /// <param name="id">id привычки</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public IActionResult DeleteHabit(Guid id)
         {
@@ -65,12 +86,18 @@ namespace HabitsTracker.WebApi.Controllers
                 return Forbid();
             }
 
-            _habitService.DeleteHabit(habitsItem.Id);
+            _habitService.DeleteHabit(id);
             return Ok();
         }
 
+        /// <summary>
+        /// Редактирование привычки 
+        /// </summary>
+        /// <param name="id">id привычки</param>
+        /// <param name="habit">измененные данные</param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult UpdateHabit(Guid id, [FromForm] Habit habit)
+        public IActionResult UpdateHabit(Guid id, [FromBody] Habit habit)
         {
             var user = _userService.GetUserByEmail(User.Identity?.Name);
             var habitsItem = _habitService.GetHabitById(id);

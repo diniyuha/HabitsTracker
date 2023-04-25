@@ -22,7 +22,7 @@ namespace HabitsTracker.Data.Entities
         /// </summary>
         public GoalPeriod GoalPeriod { get; set; }
 
-        public DateTime? DateForm { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         public DateTime? DateTo { get; set; }
 
@@ -35,5 +35,7 @@ namespace HabitsTracker.Data.Entities
         public List<HabitReminderEntity> Reminders { get; set; } = new();
 
         public List<FrequencyEntity> Frequencies { get; set; } = new();
+        
+        public List<HabitTrackingEntity> TrackRecords { get; set; } = new();
     }
 }

@@ -26,7 +26,13 @@ namespace HabitsTracker.WebApi.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("/token")]
+        /// <summary>
+        /// Получение авторизационного токена
+        /// </summary>
+        /// <param name="username">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
+        [HttpPost("token")]
         public IActionResult Token(string username, string password)
         {
             var identity = GetIdentity(username, password);
@@ -65,7 +71,7 @@ namespace HabitsTracker.WebApi.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, "user")
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
                 };
                 ClaimsIdentity claimsIdentity =
                     new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
@@ -76,6 +82,12 @@ namespace HabitsTracker.WebApi.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Регистрация нового пользователя
+        /// </summary>
+        /// <param name="email">Почта</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Register(string email, string password)
         {
@@ -105,9 +117,14 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Редактирование профиля пользователя
+        /// </summary>
+        /// <param name="user">Данные пользователя</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut]
-        public IActionResult UpdateUser([FromForm] User user)
+        public IActionResult UpdateUser([FromBody] User user)
         {
             var userEntity = _userService.GetUserByEmail(User.Identity?.Name);
 
@@ -115,6 +132,10 @@ namespace HabitsTracker.WebApi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpDelete]
         public IActionResult DeleteUser()

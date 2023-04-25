@@ -29,7 +29,9 @@ namespace HabitsTracker.Logic.MapProfiles
             CreateMap<HabitReminder, HabitReminderEntity>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => Guid.NewGuid()));
 
-            CreateMap<Unit, Unit>();
+            CreateMap<Unit, UnitEntity>()
+                .ForMember(d => d.Id, o => o.Ignore());
+            CreateMap<UnitEntity, Unit>();
         }
     }
 }

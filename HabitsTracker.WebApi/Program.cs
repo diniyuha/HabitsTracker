@@ -1,4 +1,6 @@
+using System;
 using System.Configuration;
+using System.IO;
 using System.Text;
 using HabitsTracker.Data;
 using HabitsTracker.Logic.MapProfiles;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,8 +50,37 @@ builder.Services.AddTransient<IHabitService, HabitService>();
 builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            new string[]{}
+        }
+    });
+    var xmlContractDocs = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory), "*.xml");
+    foreach (var fileName in xmlContractDocs) opt.IncludeXmlComments(fileName);
+});
 var connectionString = builder.Configuration.GetConnectionString("DbConnectionString");
 builder.Services
     .AddDbContext<AppDbContext>(options =>
@@ -70,6 +102,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

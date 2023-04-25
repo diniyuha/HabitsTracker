@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using HabitsTracker.Data;
@@ -50,6 +52,12 @@ namespace HabitsTracker.Logic.Services
         
         public User GetAuthUser(string email, string password)
         {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                password = Encoding.UTF8.GetString(hashedBytes);
+            }
+
             UserEntity user = _dbContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
             return _mapper.Map<User>(user);
         }
@@ -64,7 +72,7 @@ namespace HabitsTracker.Logic.Services
             };
 
             _dbContext.Users.Add(user);
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             return user.Id;
         }
@@ -78,7 +86,7 @@ namespace HabitsTracker.Logic.Services
             }
 
             _mapper.Map(user, userEntity);
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         public void DeleteUser(Guid id)
@@ -90,7 +98,7 @@ namespace HabitsTracker.Logic.Services
             }
 
             _dbContext.Users.Remove(userEntity);
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         public bool CheckEmailForMatches(string email)

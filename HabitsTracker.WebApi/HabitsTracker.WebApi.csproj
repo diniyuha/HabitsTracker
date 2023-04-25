@@ -20,6 +20,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
         <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.117" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,8 +28,14 @@
       <ProjectReference Include="..\HabitsTracker.Logic\HabitsTracker.Logic.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Auth" />
-    </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\HabitsTracker.WebApi.xml</DocumentationFile>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DocumentationFile>bin\Release\HabitsTracker.WebApi.xml</DocumentationFile>
+        <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
 
 </Project>

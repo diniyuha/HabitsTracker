@@ -6,7 +6,7 @@ namespace HabitsTracker.Logic.Models
 {
     public class HabitsDictionary
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
 
         public string Name { get; set; }
 
@@ -21,6 +21,6 @@ namespace HabitsTracker.Logic.Models
         public DateTime? DateTo { get; set; }
 
         public Guid UnitId { get; set; }
-        public Unit Unit { get; set; }
+        public string? UnitName { get; set; }
     }
 }

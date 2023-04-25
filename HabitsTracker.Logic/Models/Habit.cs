@@ -7,7 +7,7 @@ namespace HabitsTracker.Logic.Models
 {
     public class Habit
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
 
         public string Name { get; set; }
 
@@ -23,7 +23,7 @@ namespace HabitsTracker.Logic.Models
         /// </summary>
         public GoalPeriod GoalPeriod { get; set; }
 
-        public DateTime? DateForm { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         public DateTime? DateTo { get; set; }
 
@@ -36,5 +36,7 @@ namespace HabitsTracker.Logic.Models
         public List<HabitReminder> Reminders { get; set; } = new();
 
         public List<int> DayNumbers { get; set; } = new();
+        
+        public List<HabitTracking> TrackRecords { get; set; } = new();
     }
 }

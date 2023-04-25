@@ -9,6 +9,7 @@ namespace HabitsTracker.Logic.Services
         List<HabitsDictionary> GetHabitsDictionary();
         HabitsDictionary GetHabitsDictionaryById(Guid id);
         Unit GetUnitById(Guid id);
+        Guid CreateHabitsDictionary(HabitsDictionary habit);
+        void DeleteHabitsDictionary(Guid id);
     }
-    
 }

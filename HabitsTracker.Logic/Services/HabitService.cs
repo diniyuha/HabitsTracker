@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using HabitsTracker.Data;
 using HabitsTracker.Data.Entities;
+using HabitsTracker.Data.Enums;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +21,7 @@ namespace HabitsTracker.Logic.Services
             _mapper = mapper;
         }
 
-        public List<Habit> GetHabits(Guid userId, HabitFilter filter = null)
+        public List<Habit> GetHabits(Guid userId, HabitFilter? filter = null)
         {
             var query = _dbContext.Habits
                 .Where(h => h.UserId == userId)
@@ -36,9 +37,9 @@ namespace HabitsTracker.Logic.Services
                     query = query.Where(o => o.Name.Contains(filter.Name));
                 }
 
-                if (filter.UnitId != Guid.Empty)
+                if (filter.UnitId.HasValue)
                 {
-                    query = query.Where(x => x.UnitId == filter.UnitId);
+                    query = query.Where(x => x.UnitId == filter.UnitId.Value);
                 }
             }
 
@@ -68,7 +69,7 @@ namespace HabitsTracker.Logic.Services
             }).ToList();
 
             _dbContext.Habits.Add(habitEntity);
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
             return habitEntity.Id;
         }
@@ -88,7 +89,7 @@ namespace HabitsTracker.Logic.Services
                 DayNumber = x
             }).ToList();
 
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         public void DeleteHabit(Guid id)
@@ -100,7 +101,107 @@ namespace HabitsTracker.Logic.Services
             }
 
             _dbContext.Habits.Remove(habitEntity);
-            _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
+        }
+
+        public List<HabitTracking> GetTrackingRecordsByHabitId(Guid habitId, Guid userId)
+        {
+            var trackRecords = _dbContext.HabitTracking
+                .Include(x => x.Habit)
+                .Where(x => x.HabitId == habitId && x.Habit.UserId == userId)
+                .AsNoTracking()
+                .ToList();
+            if (trackRecords == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            return _mapper.Map<List<HabitTracking>>(trackRecords);
+        }
+
+        public HabitTracking GetTrackingRecordById(Guid id, Guid userId)
+        {
+            var trackRecord = _dbContext.HabitTracking
+                .Include(x => x.Habit)
+                .FirstOrDefault(x => x.Id == id && x.Habit.UserId == userId);
+            if (trackRecord == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            return _mapper.Map<HabitTracking>(trackRecord);
+        }
+
+        public Guid CreateHabitTracking(HabitTracking habitTracking, Guid userId)
+        {
+            var habitTrackingEntity = _mapper.Map<HabitTrackingEntity>(habitTracking);
+            habitTrackingEntity.Id = Guid.NewGuid();
+            habitTrackingEntity.Habit.UserId = userId;
+            _dbContext.HabitTracking.Add(habitTrackingEntity);
+            _dbContext.SaveChanges();
+
+            return habitTrackingEntity.Id;
+        }
+
+        public void UpdateHabitTracking(Guid id, HabitTracking habitTracking)
+        {
+            var habitTrackingEntity = _dbContext.HabitTracking.Find(id);
+            if (habitTrackingEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _mapper.Map(habitTracking, habitTrackingEntity);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteHabitTracking(Guid id)
+        {
+            var habitTrackingEntity = _dbContext.HabitTracking.Find(id);
+            if (habitTrackingEntity == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            _dbContext.HabitTracking.Remove(habitTrackingEntity);
+            _dbContext.SaveChanges();
+        }
+        
+        public List<Habit> GetTodayHabits()
+        {
+            var today = DateTime.Today;
+            var currentDayOfWeek = (int) today.DayOfWeek;
+            var currentDayOfMonth = today.Day;
+
+            var items = _dbContext.Habits
+                .Include(x => x.Frequencies)
+                .Where(x => (x.GoalPeriod == GoalPeriod.Day
+                            || (x.GoalPeriod == GoalPeriod.Week &&
+                                x.Frequencies.Any(f => f.DayNumber == currentDayOfWeek))
+                            || (x.GoalPeriod == GoalPeriod.Month &&
+                                x.Frequencies.Any(f => f.DayNumber == currentDayOfMonth))
+                            )
+                            && (!x.DateFrom.HasValue || x.DateFrom.Value <= today)
+                            && (!x.DateTo.HasValue || x.DateTo.Value >= today)
+                )
+                .ToList();
+            return _mapper.Map<List<Habit>>(items);
+        }
+
+        public int CountCompletedDays(Guid habitId, DateTime StartDate, DateTime CompletionDate)
+        {
+            var total = 0;
+            var items = _dbContext.HabitTracking
+                .Where(x => x.HabitId == habitId
+                            && x.TrackingDate >= StartDate
+                            && x.TrackingDate <= CompletionDate)
+                .ToList();
+            foreach (var record in items)
+            {
+                total += record.GoalDone;
+            }
+
+            return total;
         }
     }
 }

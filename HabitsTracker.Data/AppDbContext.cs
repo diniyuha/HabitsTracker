@@ -22,6 +22,8 @@ namespace HabitsTracker.Data
         public DbSet<FrequencyEntity> Frequencies { get; set; }
 
         public DbSet<UnitEntity> Units { get; set; }
+        
+        public DbSet<HabitTrackingEntity> HabitTracking { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,10 +71,11 @@ namespace HabitsTracker.Data
                 .Property(x => x.Name)
                 .IsRequired();
             
-            
             modelBuilder.Entity<HabitReminderEntity>().HasKey(x => x.Id);
 
             modelBuilder.Entity<FrequencyEntity>().HasKey(x => x.Id);
+            
+            modelBuilder.Entity<HabitTrackingEntity>().HasKey(x => x.Id);
          
             modelBuilder.Entity<FrequencyEntity>()
                 .Property(x => x.HabitId)
@@ -96,11 +99,18 @@ namespace HabitsTracker.Data
                 .HasForeignKey(x => x.HabitId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<HabitEntity>()
+                .HasMany(x => x.TrackRecords)
+                .WithOne(x => x.Habit)
+                .HasForeignKey(x => x.HabitId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
             modelBuilder.Entity<UserEntity>()
                 .HasMany(x => x.Habits)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }
