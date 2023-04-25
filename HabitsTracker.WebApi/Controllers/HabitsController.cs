@@ -58,11 +58,10 @@ namespace HabitsTracker.WebApi.Controllers
         /// <param name="habit">Данные привычки</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult CreateHabit([FromBody] Habit habit)
+        public IActionResult CreateHabit([FromBody] ChangeHabitRequest habit)
         {
             var user = _userService.GetUserByEmail(User.Identity?.Name);
-            habit.UserId = user.Id;
-            var habitUnit = _habitService.CreateHabit(habit);
+            var habitUnit = _habitService.CreateHabit(habit, user.Id) ;
             return Ok(habitUnit);
         }
 
@@ -97,7 +96,7 @@ namespace HabitsTracker.WebApi.Controllers
         /// <param name="habit">измененные данные</param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult UpdateHabit(Guid id, [FromBody] Habit habit)
+        public IActionResult UpdateHabit(Guid id, [FromBody] ChangeHabitRequest habit)
         {
             var user = _userService.GetUserByEmail(User.Identity?.Name);
             var habitsItem = _habitService.GetHabitById(id);
@@ -111,7 +110,6 @@ namespace HabitsTracker.WebApi.Controllers
                 return Forbid();
             }
 
-            habit.UserId = user.Id;
             _habitService.UpdateHabit(id, habit);
             return Ok();
         }

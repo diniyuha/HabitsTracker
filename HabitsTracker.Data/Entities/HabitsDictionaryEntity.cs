@@ -15,7 +15,7 @@ namespace HabitsTracker.Data.Entities
 
         public GoalPeriod GoalPeriod { get; set; }
 
-        public DateTime? DateForm { get; set; }
+        public DateTime? DateFrom { get; set; }
 
         public DateTime? DateTo { get; set; }
 

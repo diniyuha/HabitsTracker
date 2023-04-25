@@ -8,15 +8,16 @@ namespace HabitsTracker.Logic.Services
     {
         List<Habit> GetHabits(Guid userId, HabitFilter filter = null);
         Habit GetHabitById(Guid id);
-        Guid CreateHabit(Habit habit);
         void DeleteHabit(Guid id);
-        void UpdateHabit(Guid id,  Habit habit);
+        void UpdateHabit(Guid id, ChangeHabitRequest habit);
         List<HabitTracking> GetTrackingRecordsByHabitId(Guid habitId, Guid userId);
         Guid CreateHabitTracking(HabitTracking habitTracking, Guid userId);
         void UpdateHabitTracking(Guid id, HabitTracking habitTracking);
         void DeleteHabitTracking(Guid id);
         HabitTracking GetTrackingRecordById(Guid id, Guid userId);
         List<Habit> GetTodayHabits();
-        int CountCompletedDays(Guid habitId, DateTime StartDate, DateTime CompletionDate);
+        Habit GetHabitWithTrackingRecords(HabitTrackingRequest request);
+        int CountCompletedGoal(HabitTrackingRequest request);
+        Guid CreateHabit(ChangeHabitRequest habit, Guid userId);
     }
 }

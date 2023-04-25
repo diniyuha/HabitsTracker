@@ -58,36 +58,64 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<Habit>(habit);
         }
 
-        public Guid CreateHabit(Habit habit)
+        public Guid CreateHabit(ChangeHabitRequest habit, Guid userId)
         {
             var habitEntity = _mapper.Map<HabitEntity>(habit);
             habitEntity.Id = Guid.NewGuid();
+            habitEntity.UserId = userId;
             habitEntity.Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity
             {
                 Id = Guid.NewGuid(),
-                DayNumber = x
+               DayNumber = x
             }).ToList();
 
+            habitEntity.Reminders = habit.Reminders.Select(x => new HabitReminderEntity
+            {
+                Id = Guid.NewGuid(),
+                TimeReminder = x
+            }).ToList();
+            
             _dbContext.Habits.Add(habitEntity);
             _dbContext.SaveChanges();
 
             return habitEntity.Id;
         }
 
-        public void UpdateHabit(Guid id, Habit habit)
+        public void UpdateHabit(Guid id, ChangeHabitRequest habit)
         {
-            var habitEntity = _dbContext.Habits.Find(id);
+            // Удаление связанных коллекций
+            var frequencies = _dbContext.Frequencies.Where(x => x.HabitId == id).ToList();
+            _dbContext.Frequencies.RemoveRange(frequencies);
+            var reminders = _dbContext.HabitReminders.Where(x => x.HabitId == id).ToList();
+            _dbContext.HabitReminders.RemoveRange(reminders);
+
+            // Обновление полей привычки
+            var habitEntity = _dbContext.Habits
+                .Include(x => x.Frequencies)
+                .Include(x => x.Reminders)
+                .FirstOrDefault(x => x.Id == id);
             if (habitEntity == null)
             {
                 throw new ArgumentException("Not found");
             }
 
             _mapper.Map(habit, habitEntity);
-            habitEntity.Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity
+            _dbContext.Habits.Update(habitEntity);
+            
+            // Добавление связанных коллекций
+            _dbContext.Frequencies.AddRange(habit.DayNumbers.Select(x => new FrequencyEntity
             {
                 Id = Guid.NewGuid(),
+                HabitId = id,
                 DayNumber = x
-            }).ToList();
+            }));
+
+            _dbContext.HabitReminders.AddRange(habit.Reminders.Select(x => new HabitReminderEntity
+            {
+                Id = Guid.NewGuid(),
+                HabitId = id,
+                TimeReminder = x
+            }));
 
             _dbContext.SaveChanges();
         }
@@ -166,7 +194,7 @@ namespace HabitsTracker.Logic.Services
             _dbContext.HabitTracking.Remove(habitTrackingEntity);
             _dbContext.SaveChanges();
         }
-        
+
         public List<Habit> GetTodayHabits()
         {
             var today = DateTime.Today;
@@ -176,10 +204,10 @@ namespace HabitsTracker.Logic.Services
             var items = _dbContext.Habits
                 .Include(x => x.Frequencies)
                 .Where(x => (x.GoalPeriod == GoalPeriod.Day
-                            || (x.GoalPeriod == GoalPeriod.Week &&
-                                x.Frequencies.Any(f => f.DayNumber == currentDayOfWeek))
-                            || (x.GoalPeriod == GoalPeriod.Month &&
-                                x.Frequencies.Any(f => f.DayNumber == currentDayOfMonth))
+                             || (x.GoalPeriod == GoalPeriod.Week &&
+                                 x.Frequencies.Any(f => f.DayNumber == currentDayOfWeek))
+                             || (x.GoalPeriod == GoalPeriod.Month &&
+                                 x.Frequencies.Any(f => f.DayNumber == currentDayOfMonth))
                             )
                             && (!x.DateFrom.HasValue || x.DateFrom.Value <= today)
                             && (!x.DateTo.HasValue || x.DateTo.Value >= today)
@@ -188,20 +216,30 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<List<Habit>>(items);
         }
 
-        public int CountCompletedDays(Guid habitId, DateTime StartDate, DateTime CompletionDate)
+        public int CountCompletedGoal(HabitTrackingRequest request)
         {
-            var total = 0;
-            var items = _dbContext.HabitTracking
-                .Where(x => x.HabitId == habitId
-                            && x.TrackingDate >= StartDate
-                            && x.TrackingDate <= CompletionDate)
-                .ToList();
-            foreach (var record in items)
+            return _dbContext.HabitTracking
+                .Where(x => x.HabitId == request.HabitId
+                            && x.TrackingDate >= request.DateFrom
+                            && x.TrackingDate <= request.DateTo)
+                .Sum(x => x.GoalDone);
+        }
+
+        public Habit GetHabitWithTrackingRecords(HabitTrackingRequest request)
+        {
+            var habit = _dbContext.Habits.FirstOrDefault(x => x.Id == request.HabitId);
+            if (habit == null)
             {
-                total += record.GoalDone;
+                throw new ArgumentException("Not found");
             }
 
-            return total;
+            habit.TrackRecords = _dbContext.HabitTracking
+                .Where(x => x.HabitId == request.HabitId
+                            && x.TrackingDate >= request.DateFrom
+                            && x.TrackingDate <= request.DateTo)
+                .AsNoTracking()
+                .ToList();
+            return _mapper.Map<Habit>(habit);
         }
     }
 }

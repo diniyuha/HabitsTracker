@@ -86,5 +86,41 @@ namespace HabitsTracker.WebApi.Controllers
             _habitService.DeleteHabit(id);
             return Ok();
         }
+
+        /// <summary>
+        /// Получение привычек,которые нужно выполнить на сегодня
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetTodayHabits()
+        {
+            var habits = _habitService.GetTodayHabits();
+            return Ok(habits);
+        }
+
+
+        /// <summary>
+        /// Получение общей суммы выполненных целей для выбранной привычки за указанный период
+        /// </summary>
+        /// <param name="request">Состоит из: id привычки и периода</param>
+        /// <returns></returns>
+        [HttpPost("totalGoal")]
+        public IActionResult GetCompletedGoalByHabitId(HabitTrackingRequest request)
+        {
+            var totalGoalDone = _habitService.CountCompletedGoal(request);
+            return Ok(totalGoalDone);
+        }
+
+        /// <summary>
+        /// Получение списка с зафиксированными результатами за указанный период для выбранной привычки
+        /// </summary>
+        /// <param name="request">Состоит из: id привычки и периода</param>
+        /// <returns></returns>
+        [HttpPost("records")]
+        public IActionResult GetHabitWithTrackingRecords(HabitTrackingRequest request)
+        {
+            var records = _habitService.GetHabitWithTrackingRecords(request);
+            return Ok(records);
+        }
     }
 }
