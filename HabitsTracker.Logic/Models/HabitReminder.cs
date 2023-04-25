@@ -8,8 +8,7 @@ namespace HabitsTracker.Logic.Models
         public Guid Id { get; set; }
 
         public Guid HabitId { get; set; }
-        public Habit Habit { get; set; }
-
+      
         public DateTime TimeReminder { get; set; }
     }
 }
