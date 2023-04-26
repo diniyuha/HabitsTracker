@@ -24,9 +24,10 @@ namespace HabitsTracker.Logic.Services
         public List<Habit> GetHabits(Guid userId, HabitFilter? filter = null)
         {
             var query = _dbContext.Habits
-                .Where(h => h.UserId == userId)
                 .Include(x => x.Frequencies)
                 .Include(x => x.Reminders)
+                .Include(x => x.TrackRecords)
+                .Where(h => h.UserId == userId)
                 .AsNoTracking()
                 .AsQueryable();
 
@@ -49,7 +50,11 @@ namespace HabitsTracker.Logic.Services
 
         public Habit GetHabitById(Guid id)
         {
-            var habit = _dbContext.Habits.Find(id);
+            var habit = _dbContext.Habits
+                .Include(x => x.Frequencies)
+                .Include(x => x.Reminders)
+                .Include(x => x.TrackRecords)
+                .FirstOrDefault(h => h.Id == id);
             if (habit == null)
             {
                 throw new ArgumentException("Not found");
@@ -66,7 +71,7 @@ namespace HabitsTracker.Logic.Services
             habitEntity.Frequencies = habit.DayNumbers.Select(x => new FrequencyEntity
             {
                 Id = Guid.NewGuid(),
-               DayNumber = x
+                DayNumber = x
             }).ToList();
 
             habitEntity.Reminders = habit.Reminders.Select(x => new HabitReminderEntity
@@ -74,7 +79,7 @@ namespace HabitsTracker.Logic.Services
                 Id = Guid.NewGuid(),
                 TimeReminder = x
             }).ToList();
-            
+
             _dbContext.Habits.Add(habitEntity);
             _dbContext.SaveChanges();
 
@@ -101,7 +106,7 @@ namespace HabitsTracker.Logic.Services
 
             _mapper.Map(habit, habitEntity);
             _dbContext.Habits.Update(habitEntity);
-            
+
             // Добавление связанных коллекций
             _dbContext.Frequencies.AddRange(habit.DayNumbers.Select(x => new FrequencyEntity
             {
@@ -164,6 +169,13 @@ namespace HabitsTracker.Logic.Services
         {
             var habitTrackingEntity = _mapper.Map<HabitTrackingEntity>(habitTracking);
             habitTrackingEntity.Id = Guid.NewGuid();
+            var habit = _dbContext.Habits.Find(habitTrackingEntity.HabitId);
+            if (habit == null)
+            {
+                throw new ArgumentException("Not found");
+            }
+
+            habitTrackingEntity.Habit = habit;
             habitTrackingEntity.Habit.UserId = userId;
             _dbContext.HabitTracking.Add(habitTrackingEntity);
             _dbContext.SaveChanges();
@@ -198,7 +210,7 @@ namespace HabitsTracker.Logic.Services
         public List<Habit> GetTodayHabits()
         {
             var today = DateTime.Today;
-            var currentDayOfWeek = (int) today.DayOfWeek;
+            var currentDayOfWeek = GetDayOfWeek(today.DayOfWeek);
             var currentDayOfMonth = today.Day;
 
             var items = _dbContext.Habits
@@ -216,12 +228,23 @@ namespace HabitsTracker.Logic.Services
             return _mapper.Map<List<Habit>>(items);
         }
 
+        private int GetDayOfWeek(DayOfWeek dayOfWeek)
+        {
+            if (dayOfWeek == DayOfWeek.Sunday)
+            {
+                return 7;
+            }
+
+            return (int) dayOfWeek;
+        }
+
+
         public int CountCompletedGoal(HabitTrackingRequest request)
         {
             return _dbContext.HabitTracking
                 .Where(x => x.HabitId == request.HabitId
-                            && x.TrackingDate >= request.DateFrom
-                            && x.TrackingDate <= request.DateTo)
+                            && x.TrackingDate >= request.DateFrom.Date
+                            && x.TrackingDate < request.DateTo.Date.AddDays(1))
                 .Sum(x => x.GoalDone);
         }
 
@@ -235,8 +258,8 @@ namespace HabitsTracker.Logic.Services
 
             habit.TrackRecords = _dbContext.HabitTracking
                 .Where(x => x.HabitId == request.HabitId
-                            && x.TrackingDate >= request.DateFrom
-                            && x.TrackingDate <= request.DateTo)
+                            && x.TrackingDate >= request.DateFrom.Date
+                            && x.TrackingDate < request.DateTo.Date.AddDays(1))
                 .AsNoTracking()
                 .ToList();
             return _mapper.Map<Habit>(habit);

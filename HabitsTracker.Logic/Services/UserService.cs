@@ -114,7 +114,7 @@ namespace HabitsTracker.Logic.Services
         public async Task SendConfirmationEmailAsync(string email)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("YourApp", "yourapp@example.com"));
+            message.From.Add(new MailboxAddress("HabitApp", "habit.tracker@mail.ru"));
             message.To.Add(new MailboxAddress("", email));
             message.Subject = "Confirm your email address";
             var bodyBuilder = new BodyBuilder();

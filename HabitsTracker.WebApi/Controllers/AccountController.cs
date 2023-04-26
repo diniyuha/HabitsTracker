@@ -101,7 +101,6 @@ namespace HabitsTracker.WebApi.Controllers
                 return BadRequest("User with this email already exists.");
             }
 
-            // Hash the password before saving to the database
             using (var sha256 = SHA256.Create())
             {
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -111,7 +110,6 @@ namespace HabitsTracker.WebApi.Controllers
             var userId = _userService.CreateUser(email, password);
             var user = _userService.GetUserById(userId);
 
-            // Send confirmation email
             _userService.SendConfirmationEmailAsync(user.Email);
 
             return Ok();

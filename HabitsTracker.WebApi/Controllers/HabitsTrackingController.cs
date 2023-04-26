@@ -83,7 +83,7 @@ namespace HabitsTracker.WebApi.Controllers
                 return NotFound();
             }
 
-            _habitService.DeleteHabit(id);
+            _habitService.DeleteHabitTracking(id);
             return Ok();
         }
 

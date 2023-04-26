@@ -35,7 +35,8 @@ namespace HabitsTracker.Logic.MapProfiles
 
             CreateMap<HabitTrackingEntity, HabitTracking>();
             CreateMap<HabitTracking, HabitTrackingEntity>()
-                .ForMember(d => d.Id, o => o.Ignore());
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.HabitId, o => o.Ignore());
             
             CreateMap<ChangeHabitRequest, HabitEntity>()
                 .ForMember(d => d.Id, o => o.Ignore())
