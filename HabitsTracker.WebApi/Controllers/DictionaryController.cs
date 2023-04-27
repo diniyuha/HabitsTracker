@@ -4,6 +4,7 @@ using HabitsTracker.Logic.Models;
 using HabitsTracker.Logic.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace HabitsTracker.WebApi.Controllers
 {
@@ -12,12 +13,14 @@ namespace HabitsTracker.WebApi.Controllers
     public class DictionaryController : Controller
     {
         private readonly IDictionaryService _dictionaryService;
+        private readonly ILogger<DictionaryController> _logger;
 
-        public DictionaryController(IDictionaryService dictionaryService)
+        public DictionaryController(IDictionaryService dictionaryService, ILogger<DictionaryController> logger)
         {
             _dictionaryService = dictionaryService;
+            _logger = logger;
         }
-        
+
         /// <summary>
         /// Получение справочника привычек
         /// </summary>

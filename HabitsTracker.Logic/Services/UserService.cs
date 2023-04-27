@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 
 namespace HabitsTracker.Logic.Services
 {
@@ -19,13 +20,15 @@ namespace HabitsTracker.Logic.Services
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-
+        private readonly ILogger<UserService> _logger;
+        
         //TODO
-        public UserService(AppDbContext dbContext, IMapper mapper, IConfiguration configuration)
+        public UserService(AppDbContext dbContext, IMapper mapper, IConfiguration configuration, ILogger<UserService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public User GetUserById(Guid id)
@@ -33,6 +36,7 @@ namespace HabitsTracker.Logic.Services
             var userEntity = _dbContext.Users.Find(id);
             if (userEntity == null)
             {
+                _logger.LogError("User by id is not found: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -44,6 +48,7 @@ namespace HabitsTracker.Logic.Services
             var userEntity = _dbContext.Users.FirstOrDefault(u => u.Email == email);
             if (userEntity == null)
             {
+                _logger.LogError("User by email is not found: {Email}", email);
                 throw new ArgumentException("Not found");
             }
 
@@ -82,6 +87,7 @@ namespace HabitsTracker.Logic.Services
             var userEntity = _dbContext.Users.Find(id);
             if (userEntity == null)
             {
+                _logger.LogError("User by id is not found: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -94,6 +100,7 @@ namespace HabitsTracker.Logic.Services
             var userEntity = _dbContext.Users.Find(id);
             if (userEntity == null)
             {
+                _logger.LogError("User by id is not found: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 

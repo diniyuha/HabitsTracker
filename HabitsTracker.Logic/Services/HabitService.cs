@@ -7,6 +7,7 @@ using HabitsTracker.Data.Entities;
 using HabitsTracker.Data.Enums;
 using HabitsTracker.Logic.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace HabitsTracker.Logic.Services
 {
@@ -14,11 +15,13 @@ namespace HabitsTracker.Logic.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<HabitService> _logger;
 
-        public HabitService(AppDbContext dbContext, IMapper mapper)
+        public HabitService(AppDbContext dbContext, IMapper mapper, ILogger<HabitService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public List<Habit> GetHabits(Guid userId, HabitFilter? filter = null)
@@ -57,6 +60,7 @@ namespace HabitsTracker.Logic.Services
                 .FirstOrDefault(h => h.Id == id);
             if (habit == null)
             {
+                _logger.LogError("Not found habit by id: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -101,6 +105,7 @@ namespace HabitsTracker.Logic.Services
                 .FirstOrDefault(x => x.Id == id);
             if (habitEntity == null)
             {
+                _logger.LogError("Not found habit by id: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -130,6 +135,7 @@ namespace HabitsTracker.Logic.Services
             var habitEntity = _dbContext.Habits.Find(id);
             if (habitEntity == null)
             {
+                _logger.LogError("Not found habit by id: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -146,6 +152,7 @@ namespace HabitsTracker.Logic.Services
                 .ToList();
             if (trackRecords == null)
             {
+                _logger.LogError("Not found tracking records by habit id: {HabitId} for user {UserId}", habitId, userId);
                 throw new ArgumentException("Not found");
             }
 
@@ -159,6 +166,7 @@ namespace HabitsTracker.Logic.Services
                 .FirstOrDefault(x => x.Id == id && x.Habit.UserId == userId);
             if (trackRecord == null)
             {
+                _logger.LogError("Not found tracking record by id: {Id} for user {UserId}", id, userId);
                 throw new ArgumentException("Not found");
             }
 
@@ -172,6 +180,7 @@ namespace HabitsTracker.Logic.Services
             var habit = _dbContext.Habits.Find(habitTrackingEntity.HabitId);
             if (habit == null)
             {
+                _logger.LogError("Not found tracking record by habit id: {HabitId} for user {UserId}", habitTrackingEntity.HabitId, userId);
                 throw new ArgumentException("Not found");
             }
 
@@ -188,6 +197,7 @@ namespace HabitsTracker.Logic.Services
             var habitTrackingEntity = _dbContext.HabitTracking.Find(id);
             if (habitTrackingEntity == null)
             {
+                _logger.LogError("Not found tracking record by id: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -200,6 +210,7 @@ namespace HabitsTracker.Logic.Services
             var habitTrackingEntity = _dbContext.HabitTracking.Find(id);
             if (habitTrackingEntity == null)
             {
+                _logger.LogError("Not found tracking record by id: {Id}", id);
                 throw new ArgumentException("Not found");
             }
 
@@ -253,6 +264,7 @@ namespace HabitsTracker.Logic.Services
             var habit = _dbContext.Habits.FirstOrDefault(x => x.Id == request.HabitId);
             if (habit == null)
             {
+                _logger.LogError("Not found tracking record by habit id: {HabitId}", request.HabitId);
                 throw new ArgumentException("Not found");
             }
 

@@ -17,6 +17,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.16" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.16" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.29.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
         <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.117" />
