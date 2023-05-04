@@ -94,6 +94,8 @@ builder.Services.AddAutoMapper(typeof(MapProfiles));
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
+    .WriteTo.Seq("http://localhost:5341",
+        apiKey: "D896V2rk3NhUSiDBnFFn")
     .CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
